@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/Css/Bootstap.min.css">
+    <script src="/public/Js/Bootstap.buddle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="/public/Js/sweetalert2.js"></script>
+    <title>BBS</title>
+    <style>
+        .content-section {
+            border-radius: 10px;
+            /* Rounded corners */
+            padding: 20px;
+            text-align: center;
+            /* Center-align content */
+        }
+
+        .book-title,
+        #statusLabel,
+        #statusValue,
+        #borrowedDate,
+        #returnedDate {
+            font-size: 1em;
+            /* Font size */
+            color: rgb(240, 92, 92);
+            /* Red font color */
+            font-weight: bold;
+            /* Bold font weight */
+        }
+
+        #statusValue {
+            color: grey;
+            /* Grey color for "Pending" */
+            margin-left: 5px;
+            /* Add some space between label and value */
+        }
+
+        #cancelButton {
+            margin-top: 20px;
+            /* Adjust top margin to move cancel button down */
+            float: right;
+            /* Align cancel button to the right */
+            border-radius: 20px;
+            /* Make button more rounded */
+        }
+
+        .content-frame {
+            background-color: #f0f0f0;
+            /* Background color for the content frame */
+            border-radius: 10px;
+            /* Rounded corners */
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        /* Added CSS for active navigation links */
+        .active-link {
+            color: red !important;
+            /* Change the color to red */
+        }
+
+        /* Removed background color for top navigation bar */
+        .navbar {
+            background-color: transparent !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="text-end mx-3">
+        <img src="/public/Image/user.png" alt="User" width="25" class="mt-2 mb-2">
+        <span id="SetUsername" style="color: black;" class="mt-2">User</span>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+        <div class="container border-bottom border-2 border-danger thick-border-bottom">
+            <img src="/public/Image/icon.png" alt="icon" width="75" class="mx-3">
+            <a class="navbar-brand text-white" href="/Home">
+                <span style="color: rgb(160, 0, 0);">BOOK BORROWING</span>_<span
+                    style="color: rgba(204, 144, 53, 0.699);">SYSTEM</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home">HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home/List">LIST</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home/Status" style="color: rgb(160, 0, 0);">STATUS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home/History">HISTORY</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Button trigger modal -->
+                        <a type="button" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#modalId"
+                            data-target=".bd-example-modal-lg">
+                            LOGOUT
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog" role="document">
+                                <div class="modal-content ">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            LOG OUT
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="button" class="btn btn-success" id="logoutBtn">LOG OUT</button>
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-3" id="contentContainer">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="input-group col-md-6">
+                    <input type="search" class="form-control search-input rounded-pill"
+                        style="background-color: #f0f0f0;" placeholder="Search">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="Confirmaction">
+        <!-- <div class="row ">
+            <div class="col-md-12">
+                <div class="content-frame">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="content-section">
+                                <img src="/public/Image/book1.png" alt="Book Image" id="bookImage" class="img-fluid"
+                                    style="width: 33.33%;">
+                                <h5 class="text-center" id="bookName1"
+                                    style=" padding:10px 5px;color: rgba(204, 144, 53, 0.699);"></h5>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="content-section">
+                                <h5 class="book-title" id="bookName2" style="font-size: 20px;"></h5>
+                                <br>
+                                <p>BORROWED DATE-RETURNED DATE :<span id="Time"></span></p>
+                                <div class="status-section" id="statusSection">
+                                    <p id="statusLabel">STATUS: <span id="statusValue"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="content-section mt-5">
+                                <button class="btn btn-danger btn-lg" id="cancelButton">CANCEL</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+        <script>
+            function setBookInfo() {
+                const confirmTitle = localStorage.getItem('ConTitle');
+                const confirmPic = localStorage.getItem('ConPic');
+                const confirmDate = localStorage.getItem('ConDate');
+                const container = document.getElementById('Confirmaction');
+
+                if (confirmTitle && confirmPic && confirmDate) {
+                    // Display the container
+                    container.style.display = 'block';
+
+                    // Create book image element
+                    const bookImageDiv = document.createElement('div');
+                    bookImageDiv.className = 'col-md-4';
+                    const bookImageSection = document.createElement('div');
+                    bookImageSection.className = 'content-section';
+                    const img = document.createElement('img');
+                    img.src = confirmPic;
+                    img.alt = "Book Image";
+                    img.id = "bookImage";
+                    img.className = "img-fluid";
+                    img.style.width = "33.33%";
+                    bookImageSection.appendChild(img);
+                    bookImageDiv.appendChild(bookImageSection);
+
+                    // Create book name element
+                    const bookNameDiv = document.createElement('div');
+                    bookNameDiv.className = 'col-md-4';
+                    const bookNameSection = document.createElement('div');
+                    bookNameSection.className = 'content-section';
+                    const bookName = document.createElement('h5');
+                    bookName.className = 'book-title';
+                    bookName.id = 'bookName2';
+                    bookName.style.fontSize = '20px';
+                    bookName.textContent = confirmTitle;
+                    const dateSpan = document.createElement('span');
+                    dateSpan.id = 'Time';
+                    dateSpan.textContent = confirmDate;
+                    const p = document.createElement('p');
+                    p.textContent = 'BORROWED DATE-RETURNED DATE: ';
+                    p.appendChild(dateSpan);
+                    bookNameSection.appendChild(bookName);
+                    bookNameSection.appendChild(p);
+                    bookNameDiv.appendChild(bookNameSection);
+
+                    // Append elements to the container
+                    container.appendChild(bookImageDiv);
+                    container.appendChild(bookNameDiv);
+
+                    // Optional: Add status section if needed
+                    const statusDiv = document.createElement('div');
+                    statusDiv.className = 'col-md-4';
+                    const statusSection = document.createElement('div');
+                    statusSection.className = 'status-section';
+                    const statusLabel = document.createElement('p');
+                    statusLabel.id = 'statusLabel';
+                    statusLabel.textContent = 'STATUS: ';
+                    const statusValue = document.createElement('span');
+                    statusValue.id = 'statusValue';
+                    statusValue.textContent = 'Pending';
+                    statusLabel.appendChild(statusValue);
+                    statusSection.appendChild(statusLabel);
+                    statusDiv.appendChild(statusSection);
+
+                    // Append the status div to the container
+                    container.appendChild(statusDiv);
+                } else {
+                    console.log('Required data not available in localStorage.');
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', setBookInfo);
+
+
+
+
+            function setUserName() {
+                const usernameElement = document.querySelector('#SetUsername');
+                const username = localStorage.getItem('name');
+                usernameElement.textContent = username || 'User'; // หากไม่มีชื่อผู้ใช้จะแสดงเป็น "User"
+            }
+
+            // เรียกใช้งานฟังก์ชันเมื่อหน้าโหลดเสร็จสมบูรณ์
+            window.onload = function () {
+                setUserName();
+                setBookInfo();
+            };
+
+            // ฟังก์ชัน Logout
+            function logout() {
+                localStorage.removeItem('name'); // ลบข้อมูลชื่อผู้ใช้ออกจาก Local Storage
+                window.location.href = '/'; // ลิ้งค์ไปยังหน้าหลัก
+            }
+
+            // เพิ่ม Event Listener สำหรับปุ่ม Logout
+            document.querySelector('#logoutBtn').addEventListener('click', logout);
+        </script>
+
+
+        </script>
+</body>
+
+</html>

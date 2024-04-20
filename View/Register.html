@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="/public/Css/Bootstap.min.css">
+    <script src="/public/Js/Bootstap.buddle.min.js"></script>
+    <script src="/public/Js/sweetalert2.js"></script>
+</head>
+
+<body>
+    <h1 class="text-center p-5" style="color: white; background-color: rgb(160, 0, 0);">Registration</h1>
+    <div class="container mt-5">
+        <form id="registrationForm" method="post" action="/Register">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Student ID :</span>
+                </div>
+                <input type="text" class="form-control" name="studentID">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Name :</span>
+                </div>
+                <input type="text" class="form-control" name="name">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Email :</span>
+                </div>
+                <input type="text" class="form-control" name="email">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Password :</span>
+                </div>
+                <input type="password" class="form-control" name="password" id="password">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Re-enter Password :</span>
+                </div>
+                <input type="password" class="form-control" name="reenterPassword" id="reenterPassword">
+            </div>
+            <div class="text-end mt-3">
+                <label>Already have an account!</label>
+                <a href="/" class="link-danger link-offset-2 link-underline link-underline-opacity-0">Sign in</a>
+            </div>
+            <div class="row justify-content-center mt-5">
+                <div class="col-auto">
+                    <button type="submit" class="btn" style="background-color: #E1BD7A; color: white;">Register</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // Check for registerSuccess query parameter in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const registerSuccess = urlParams.get('registerSuccess');
+        if (registerSuccess === 'true') {
+            // Display success message using SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: 'Registration successful!',
+                showConfirmButton: false,
+                timer: 2000 // Auto close after 2 seconds
+            });
+        }
+        const registerError = urlParams.get('registerError');
+        if (registerError === 'true') {
+            // Display error message using SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: 'Please fill in all fields!',
+                showConfirmButton: false,
+                timer: 2000 // Auto close after 2 seconds
+            });
+        }
+        const passwordMismatch = urlParams.get('passwordMismatch');
+        if (passwordMismatch === 'true') {
+            // Display error message using SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: 'Password do not make!!',
+                showConfirmButton: false,
+                timer: 2000 // Auto close after 2 seconds
+            });
+        }
+    </script>
+</body>
+
+</html>

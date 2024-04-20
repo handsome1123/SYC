@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/public/Css/Bootstap.min.css">
+    <script src="/public/Js/Bootstap.buddle.min.js"></script>
+    <script src="/public/Js/sweetalert2.js"></script>
+    <style>
+        .container {
+            max-width: 650px;
+            /* Adjust the max-width as needed */
+        }
+    </style>
+</head>
+
+<body style="background-color: antiquewhite;">
+    <div class="container position-absolute top-50 start-50 translate-middle px-5">
+        <div style="background-color: white;" class="rounded-lg shadow p-4">
+            <h1 class="text-center mb-5">Sign in</h1>
+            <form id="formLogin">
+                <input type="text" class="form-control mb-3" placeholder="Username" id="username" name="StuID">
+                <input type="password" class="form-control mb-3" placeholder="Password" id="password" name="password">
+
+                <div class="text-end mt-3">
+                    <label>Don't have an account?</label>
+                    <a href="/Register"
+                        class="link-danger link-offset-2 link-underline link-underline-opacity-0">Register</a>
+                </div>
+
+                <div class="row justify-content-center mt-3">
+                    <div class="col-auto">
+                        <button id="btnLogin" class="btn" style="background-color: #E1BD7A; color: white;">Sign
+                            in</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        const formLogin = document.querySelector('#formLogin');
+        formLogin.onsubmit = async function (e) {
+            e.preventDefault();
+            const username = formLogin['StuID'].value;
+            const password = formLogin['password'].value;
+
+            const options = {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "borrower_id": username,
+                    "password": password,
+                }),
+            }
+
+            try {
+                const response = await fetch('/login', options);
+                if (response.ok) {
+                    const data = await response.text();
+                    localStorage.setItem('name', username);
+                    location.replace(data);
+                } else if (response.status === 401) {
+                    const data = await response.text();
+                    throw Error(data);
+                } else {
+                    throw Error("Wrong Username or Password");
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: error.message
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>

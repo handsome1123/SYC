@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/Css/Bootstap.min.css">
+    <script src="/public/Js/Bootstap.buddle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="/public/Js/sweetalert2.js"></script>
+
+    <title>BBS_staff</title>
+    <style>
+        .custom-card {
+            width: calc(33.33% - 20px);
+            /* Adjust the width of the cards */
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .custom-card img {
+            width: 25%;
+            max-height: 150px;
+            /* Limit image height */
+            object-fit: cover;
+            /* Maintain aspect ratio */
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .custom-card .card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .custom-card button {
+            margin-top: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .modal-title {
+            position: absolute;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-close {
+            position: absolute;
+            right: 1rem;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .text-available {
+            color: #28a745;
+        }
+
+        .text-borrowed {
+            color: #ffc107;
+        }
+
+        .text-disable {
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="text-end mx-3">
+        <img src="/public/Image/user.png" alt="User" width="25" class="mt-2 mb-2">
+        <span id="SetUsername" style="color: black;" class="mt-2">Staff</span>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container border-bottom border-2 border-danger thick-border-bottom">
+            <img src="/public/Image/icon.png" alt="icon" width="75" class="mx-3">
+            <a class="navbar-brand text-white" href="/HomeStaff"><span style="color: rgb(160, 0, 0);">BOOK
+                    BORROWING</span>_<span style="color: rgba(204, 144, 53, 0.699);">SYSTEM</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/HomeStaff">DASHBOARD</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " style="color: rgb(160, 0, 0);" href="#">LIST</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/HomeStaff/Return">RETURN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/HomeStaff/History">HISTORY</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Button trigger modal -->
+                        <a type="button" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#modalId"
+                            data-target=".bd-example-modal-lg">
+                            LOGOUT
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog" role="document">
+                                <div class="modal-content ">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            LOG OUT
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="button" class="btn btn-success" id="logoutBtn">LOG OUT</button>
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5"></div>
+            <div class="col-md-3">
+                <div class="justify-content-center">
+                    <button id="addBookButton" class="btn text-success me-2" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addBookModal">ADD BOOK</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="search" class="form-control search-input rounded-pill"
+                        style="background-color: #f0f0f0;" placeholder="Search">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Cardbook" class="d-flex flex-wrap justify-content-center"></div>
+
+    <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBookModalLabel">Add Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Add form or other content for adding a book here -->
+                <div class="modal-body d-flex justify-content-center align-items-center">
+                    <!-- Form content for adding a book goes here -->
+                    <img src="/public/Image/Screenshot 2024-03-30 104605.png" alt="picture" class="img-fluid">
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">BOOK NAME :</span>
+                        </div>
+                        <input type="text" class="form-control" name="name">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">BORROW STATUS :</span>
+                        </div>
+                        <div class="dropdown">
+                            <button style="background-color: rgb(255, 228, 194);"
+                                class="btn dropdown-toggle text-success" type="button" id="dropdownMenuButton2"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                STATUS
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                <button class="dropdown-item" type="button">AVAILABLE</button>
+                                <button class="dropdown-item" type="button">DISABLE</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CANCEL</button>
+                        <button type="button" class="btn btn-primary">CONFIRM</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle (includes Popper.js) -->
+    <script src="/public/Js/jquery.min.js"></script>
+    <script src="/public/Js/popper.min.js"></script>
+    <script src="/public/Js/Bootstap.bundle.min.js"></script>
+
+    <script>
+        const books = [
+            { "title": "FRONT AND CENTER", "image": "book1.png", "description": "AVAILABLE", "status": "available" },
+            { "title": "RULES FOR ROMANCE", "image": "book2.png", "description": "BORROWED", "status": "borrowed" },
+            { "title": "STARBORN", "image": "book3.png", "description": "DISABLE", "status": "disable" },
+            { "title": "ANOTHER HOT SUMMER", "image": "book4.png", "description": "AVAILABLE", "status": "available" },
+            { "title": "LOVE RIGHT NEXT DOOR", "image": "book5.png", "description": "AVAILABLE", "status": "available" }
+        ];
+
+        // Function to render books on the page
+        function renderBooks() {
+            let data = '';
+            books.forEach(function (book, index) {
+                data += `<div class="card m-3 shadow" style="height: 300px; width: 300px; text-align: center;">`;
+                data += `<img class="py-3 mx-auto" style="width: 100px;" src="/public/Image/${book.image}" alt="Books" onclick="showAlert(${index})">`;
+                data += `<div class="card-body" style="flex-grow: 1;">`;
+                data += `<p class="card-text text-center">${book.title}</p>`;
+                data += `<p class="card-text text-center" style="color: ${getTextColor(book.status)};">${book.description.toUpperCase()}</p>`;
+                data += `</div>`;
+                data += `</div>`;
+            });
+            document.querySelector("#Cardbook").innerHTML = data;
+        }
+
+        // Function to handle logout
+        function logout() {
+            // Clear any user-related data from local storage
+            localStorage.removeItem('name'); // Assuming you store the username under the key 'name'
+
+            // Redirect to the index page
+            window.location.href = '/'; // Replace '/index.html' with the actual path of your index page
+        }
+
+        // Function to get text color based on status
+        function getTextColor(status) {
+            if (status === "available") {
+                return "#28a745"; // Green color
+            } else if (status === "borrowed") {
+                return "#ffc107"; // Yellow color
+            } else if (status === "disable") {
+                return "#dc3545"; // Red color
+            }
+            return "#000"; // Default color
+        }
+
+        // Function to show alert
+        function showAlert(index) {
+            const book = books[index];
+            Swal.fire({
+                html: `
+                    <div>
+                        <img src="../public/Image/${book.image}" style="width: 100px; height: 150px; margin-bottom: 10px;"/>
+                        <p>${book.title}</p>
+                        <p style="color: ${getTextColor(book.status)};">${book.description}</p>
+                        <button type="button" class="btn btn-primary" onclick="editBook(${index})">Edit</button>
+                    </div>`
+            });
+        }
+        function setUserName() {
+            const usernameElement = document.querySelector('#SetUsername');
+            const username = localStorage.getItem('name'); // Assuming you have stored the username in localStorage after login
+            usernameElement.textContent = username;
+        }
+        // Call the function when the page loads
+        window.onload = setUserName;
+
+        // Function to edit book
+        function editBook(index) {
+            const book = books[index];
+            Swal.fire({
+                title: 'Edit Book',
+                html:
+                    `<input id="swal-input1" class="swal2-input" placeholder="Title" value="${book.title}">
+                     <select id="swal-input2" class="swal2-input mt-4">
+                        <option value="available">AVAILABLE</option>
+                        <option value="borrowed">BORROWED</option>
+                        <option value="disable">DISABLE</option>
+                     </select>
+                     <input id="swal-input3" class="swal2-input" placeholder="Image URL" value="${book.image}">`,
+                focusConfirm: false,
+                preConfirm: () => {
+                    return [
+                        document.getElementById('swal-input1').value,
+                        document.getElementById('swal-input2').value,
+                        document.getElementById('swal-input3').value
+                    ]
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const [newTitle, newStatus, newImage] = result.value;
+                    // Change description based on status
+                    let newDescription = newStatus.toUpperCase();
+                    books[index] = {
+                        ...book,
+                        title: newTitle,
+                        description: newDescription,
+                        image: newImage,
+                        status: newStatus
+                    };
+
+                    renderBooks(); // Re-render books after editing
+                }
+            });
+        }
+
+        // Add event listener for logout button click
+        document.querySelector('#logoutBtn').addEventListener('click', logout);
+
+        // Initial rendering of books
+        renderBooks();
+    </script>
+</body>
+
+</html>

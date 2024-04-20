@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/Css/Bootstap.min.css">
+    <script src="/public/Js/Bootstap.buddle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="/public/Js/sweetalert2.js"></script>
+    <link href="/public/Css/mobiscroll.javascript.min.css" rel="stylesheet" />
+    <script src="/public/Js/mobiscroll.javascript.min.js"></script>
+    <title>BBS</title>
+    <style>
+        .modal-backdrop.show {
+            z-index: 1060;
+        }
+
+        .modal {
+            z-index: 1070;
+        }
+
+        /* Additional custom styles */
+    </style>
+
+</head>
+
+<body>
+    <nav class="text-end mx-3">
+        <img src="/public/Image/user.png" alt="User" width="25" class="mt-2 mb-2">
+        <span id="SetUsername" style="color: black;" class="mt-2">User</span>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg ">
+
+        <div class="container border-bottom border-2 border-danger thick-border-bottom">
+            <img src="/public/Image/icon.png" alt="icon" width="75" class="mx-3">
+            <a class="navbar-brand text-white" href="/Home"><span style="color: rgb(160, 0, 0);">BOOK
+                    BORROWING</span>_<span style="color: rgba(204, 144, 53, 0.699);">SYSTEM</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home">HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home/List" style="color: rgb(160, 0, 0);">LIST</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home/Status">STATUS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home/History">HISTORY</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Button trigger modal -->
+                        <a type="button" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#modalId"
+                            data-target=".bd-example-modal-lg">
+                            LOGOUT
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog" role="document">
+                                <div class="modal-content ">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            LOG OUT
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="button" class="btn btn-success" id="logoutBtn">LOG OUT</button>
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-3" id="contentContainer">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="input-group col-md-6">
+                    <input type="search" class="form-control search-input rounded-pill"
+                        style="background-color: #f0f0f0;" placeholder="Search">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Books Section -->
+    <div id="displayList" class="d-flex flex-wrap justify-content-center"></div>
+
+    <script>
+
+        const displayHome = document.querySelector('#displayList');
+
+        function setUserName() {
+            const usernameElement = document.querySelector('#SetUsername');
+            const username = localStorage.getItem('name'); // Assuming you have stored the username in localStorage after login
+            usernameElement.textContent = username;
+        }
+        // Call the function when the page loads
+        window.onload = setUserName;
+
+        async function getbook() {
+            try {
+                const response = await fetch('/Allbook');
+                if (response.ok) {
+                    const data = await response.json();
+                    let card = '';
+                    data.forEach(function (d) {
+                        card += `<div class="card m-3 shadow" style="height : 300px; width : 300px; text-align: center;"`;
+                        if (d.status == 'Available') {
+                            card += `onclick="showAlert('${d.name_book}', '${d.status}', '${d.image}')"`;
+                        }
+                        card += `>`;
+                        card += `<img class="py-3 mx-auto" style="width: 100px;" src="/public/Image/${d.image}" alt="Books" >`;
+                        card += `<div class="card-body" style="flex-grow: 1;">`;
+                        card += `<p class="card-text text-center" style="color: rgba(204, 144, 53, 0.699);" >${d.name_book}</p>`;
+                        if (d.status == "Borrowed") {
+                            card += `<p class="card-text text-center text-warning" style="font-weight:bold">${d.status}</p>`;
+                        } else if (d.status == "Disable") {
+                            card += `<p class="card-text text-center text-danger" style="font-weight:bold">${d.status}</p>`;
+                        } else if (d.status == "Available") {
+                            card += `<p class="card-text text-center text-success" style="font-weight:bold">${d.status}</p>`;
+                        }
+                        card += `</div>`;
+                        card += `</div>`;
+                    });
+                    displayHome.innerHTML = card;
+                } else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        getbook();
+
+        function showAlert(name_book, status, image) {
+            Swal.fire({
+                html: `
+            <div id="ConfirmBook">
+                <img src="../public/Image/${image}" id="ConfirmPic" style="width: 100px; height: 150px; margin-bottom: 10px;"/>
+                <p style="color: rgba(204, 144, 53, 0.699);" id="ConfirmTitle">${name_book}</p>
+                <p class="text-success">${status}</p>
+                <div>
+                <input id="inline-picker" class="ConfirmDate mt-3 mb-3"/>    
+                </div>
+                <button class="btn btn-secondary" id="confirmdata">Confirm</button>
+            </div>`,
+                didOpen: () => {
+                    mobiscroll.datepicker('#inline-picker', {
+                        controls: ['calendar'],
+                        select: 'range',
+                        display: 'inline',
+                        touchUi: true
+                    });
+                    formLo = document.getElementById('confirmdata').addEventListener('click', async function () {
+                        formLo.onsubmit = async function (e) {
+                            e.preventDefault();
+                            const ConfirmName = document.querySelector('#ConfirmTitle').textContent;
+                            const ConfirmPic = document.querySelector('#ConfirmPic').getAttribute('src');
+                            const ConfirmDate = document.querySelector('#inline-picker').value;
+
+                            const options = {
+                                method: 'POST',
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                    "ConfirmTitle": ConfirmName,
+                                    "ConfirmPic": ConfirmPic,
+                                    "ConfirmDate": ConfirmDate,
+                                }),
+                            }
+
+
+                        }
+                        try {
+                            const response = await fetch('/Home/List', options);
+                            if (response.ok) {
+                                const data = await response.text();
+                                localStorage.setItem('ConTitle', ConfirmName);
+                                localStorage.setItem('ConPic', ConfirmPic);
+                                localStorage.setItem('ConDate', ConfirmDate);
+
+                                // เพิ่มเรียกใช้ฟังก์ชัน setBookInfo() เมื่อมีการคลิกที่การ์ดหนังสือ
+                                setBookInfo();
+
+                                location.replace(data);
+
+                                // Display success message using SweetAlert
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Confirmation Successful',
+                                    showConfirmButton: false,
+                                    timer: 2000 // Auto close after 2 seconds
+                                });
+                            } else if (response.status === 401) {
+                                const data = await response.text();
+                                throw Error(data);
+                            } else {
+                                throw Error("error");
+                            }
+                        } catch (error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: error.message
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+
+
+
+        // Logout function
+        function logout() {
+            // Clear any user-related data from local storage
+            localStorage.removeItem('name'); // Assuming you store the username under the key 'name'
+
+            // Redirect to the index page
+            window.location.href = '/'; // Replace '/index.html' with the actual path of your index page
+        }
+
+        // Add event listener for logout button click
+        document.querySelector('#logoutBtn').addEventListener('click', function () {
+            logout();
+        });
+
+
+    </script>
+
+</body>
+
+</html>

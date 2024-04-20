@@ -1,0 +1,24 @@
+#db {
+    margin-left: 60px;
+    height: 300px; 
+    width:auto;
+    border-radius: 8px; /* Adjust the border-radius value for rounded corners */
+    font-weight: bold;
+    
+    text-align: center; 
+    justify-content: center;
+    
+}
+#text{
+    font-size: 50px;
+   
+    align-items: center; /* Center vertically */
+    justify-content: center;
+   
+}
+#label{
+    padding-top: 40px;
+}
+.dashboard-link {
+    color: red;
+}

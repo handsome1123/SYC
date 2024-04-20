@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/Css/Bootstap.min.css">
+    <script src="/public/Js/Bootstap.buddle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="/public/Js/sweetalert2.js"></script>
+    <title>BBS</title>
+</head>
+
+<body>
+    <nav class="text-end mx-3">
+        <img src="/public/Image/user.png" alt="User" width="25" class="mt-2 mb-2">
+        <span id="SetUsername" style="color: black;" class="mt-2">User</span>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg ">
+
+        <div class="container border-bottom border-2 border-danger thick-border-bottom">
+            <img src="/public/Image/icon.png" alt="icon" width="75" class="mx-3">
+            <a class="navbar-brand text-white" href="/Home"><span style="color: rgb(160, 0, 0);">BOOK
+                    BORROWING</span>_<span style="color: rgba(204, 144, 53, 0.699);">SYSTEM</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Home" style="color: rgb(160, 0, 0);">HOME</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home/List">LIST</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home/Status">STATUS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/Home/History">HISTORY</a>
+                    </li>
+                    <li class="nav-item">
+                        <a type="button" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#modalId"
+                            data-target=".bd-example-modal-lg">
+                            LOGOUT
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog" role="document">
+                                <div class="modal-content ">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            LOG OUT
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="button" class="btn btn-success" id="logoutBtn">LOG OUT</button>
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Section -->
+    <header class="container"
+        style="padding: 7rem 30rem; background: url('/public/Image/home.png') center; background-size: 100%; background-position: center 50%;">
+        <form>
+            <div class="center">
+                <div class="input-group mb-2">
+                    <input type="text" placeholder="Search..." class="form-control " style="border-radius: 20px;">
+
+                    <i class="bi bi-search" style="color: rgba(204, 144, 53, 0.699);"></i>
+
+                </div>
+            </div>
+        </form>
+    </header>
+    <!-- Books Section -->
+    <div id="displaybook" class="px-3 py-5 d-flex flex-wrap justify-content-center"></div>
+
+
+    <script>
+        // const book = [{ "title": "FRONT AND CENTER", "image": "book1.png", "enable": false },
+        // { "title": "ANOTHER HOT SUMMER", "image": "book2.png", "enable": true },
+        // { "title": "RULES FOR ROMANCE", "image": "book3.png", "enable": true },
+        // { "title": "STARBORN", "image": "book4.png", "enable": false },
+        // { "title": "LOVE RIGHT NEXT DOOR", "image": "book5.png", "enable": true }];
+
+
+        const displayHome = document.querySelector('#displaybook');
+
+        async function getbook() {
+            try {
+                const response = await fetch('/Allbook');
+                if (response.ok) {
+                    const data = await response.json();
+                    let card = '';
+                    data.forEach(function (d) {
+                        card += `<div style="width : 250px;">`;
+                        card += `<img style="width: 150px;" src="public/Image/${d.image}" alt="Books" >`;
+                        card += `<div>`;
+                        card += `<h5 class="text-center" style="width : 150px; padding:10px 5px;color: rgba(204, 144, 53, 0.699); ">${d.name_book}</h5>`;
+                        card += `</div>`;
+                        card += `</div>`;
+                    });
+                    displayHome.innerHTML = card;
+                } else {
+                    throw Error('Connection error');
+                }
+            }catch (err) {
+                    console.error(err);
+                }
+        }
+        getbook();
+
+        function setUserName() {
+            const usernameElement = document.querySelector('#SetUsername');
+            const username = localStorage.getItem('name'); // Assuming you have stored the username in localStorage after login
+            usernameElement.textContent = username;
+        }
+        // Call the function when the page loads
+        window.onload = setUserName;
+
+        function logout() {
+            // Clear any user-related data from local storage
+            localStorage.removeItem('name'); // Assuming you store the username under the key 'name'
+
+            // Redirect to the index page
+            window.location.href = '/'; // Replace '/index.html' with the actual path of your index page
+        }
+
+        // Add event listener for logout button click
+        document.querySelector('#logoutBtn').addEventListener('click', function () {
+            logout();
+        });
+
+
+    </script>
+</body>
+
+</html>

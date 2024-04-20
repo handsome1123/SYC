@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/Css/Bootstap.min.css">
+    <script src="/public/Js/Bootstap.buddle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="/public/Js/sweetalert2.js"></script>
+    <title>BBS_admin</title>
+    <style>
+        .content-section {
+            background-color: #f0f0f0;
+            /* Background color for book image and status */
+            border-radius: 10px;
+            /* Rounded corners */
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            /* Center-align content */
+        }
+
+        .book-title {
+            font-size: 1em;
+            /* Font size for book title under book image */
+        }
+
+        #middleBookTitle {
+            font-size: 1em;
+            /* Font size for book title in the middle */
+            color: rgb(240, 92, 92);
+            /* Red font color */
+            font-weight: bold;
+            /* Bold font weight */
+        }
+
+        #borrowedDate,
+        #returnedDate {
+            font-weight: bold;
+            /* Bold font weight */
+            color: rgb(240, 92, 92);
+            /* Red font color */
+        }
+
+        #status {
+            font-weight: bold;
+            /* Bold font weight */
+            color: rgb(240, 92, 92);
+            /* Red font color */
+        }
+
+
+        #approveButton,
+        #disapproveButton {
+            display: block;
+            /* Display buttons as block elements */
+            width: 50%;
+            /* Set buttons to 80% width */
+            border-radius: 20px;
+            /* Make buttons more rounded */
+        }
+
+        #approveButton {
+            background-color: #d8a05f;
+            /* Change background color of the Approve button to a lighter shade of yellow */
+            margin-bottom: 10px;
+            /* Adjust bottom margin for spacing between buttons */
+        }
+
+        #disapproveButton {
+            background-color: #760000d4;
+            /* Change background color of the Disapprove button to brown */
+        }
+
+        .content-frame {
+            background-color: #f0f0f0;
+            /* Background color for the content frame */
+            border-radius: 10px;
+            /* Rounded corners */
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="text-end mx-3">
+        <img src="/public/Image/user.png" alt="User" width="25" class="mt-2 mb-2">
+        <span id="SetUsername" style="color: black;" class="mt-2">Admin</span>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container border-bottom border-2 border-danger thick-border-bottom">
+            <img src="/public/Image/icon.png" alt="icon" width="75" class="mx-3">
+            <a class="navbar-brand text-white" href="/HomeAdmin"><span style="color: rgb(160, 0, 0);">BOOK
+                    BORROWING</span>_<span style="color: rgba(204, 144, 53, 0.699);">SYSTEM</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/HomeAdmin">DASHBOARD</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" style="color: rgb(160, 0, 0);" href="/HomeAdmin/Status">LIST/STATUS</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/HomeAdmin/History">HISTORY</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Button trigger modal -->
+                        <a type="button" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#modalId"
+                            data-target=".bd-example-modal-lg">
+                            LOGOUT
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog" role="document">
+                                <div class="modal-content ">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            LOG OUT
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="button" class="btn btn-success" id="logoutBtn">LOG OUT</button>
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-3" id="contentContainer">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="input-group col-md-6">
+                    <input type="search" class="form-control search-input rounded-pill"
+                        style="background-color: #f0f0f0;" placeholder="Search">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content-frame">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="content-section">
+                                <img src="/public/Image/book1.png" alt="Book Image" id="bookImage" class="img-fluid"
+                                    style="width: 33.33%;">
+                                <h5 class="text-center" style="font-size: 15px; padding:10px 5px;color: rgba(204, 144, 53, 0.699); ">
+                                    FONT AND CENTER</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="content-section">
+                                <h5 class="book-title" id="middleBookTitle"  style="font-size: 20px;">BORROWING REQUESTS</h5><br>
+                                <!-- Changed book title in the middle -->
+                                <p id="borrowedDate">STUDENT ID : 65...</p> <!-- Changed borrowed date to student ID -->
+                                <p id="returnedDate">BORROWED DATE : 15/01/67</p>
+                                <p id="returnedDate">RETURNED DATE : 24/01/67</p> <!-- Removed redundant line -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="content-section button-section">
+                                <button class="btn text-white btn-lg" id="approveButton">APPROVE</button><br>
+                                <!-- Changed cancel button to approve button -->
+                                <button class="btn text-white btn-lg" id="disapproveButton">DISAPPROVE</button>
+                                <!-- Added disapprove button -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-1">
+            <div class="col-md-12">
+                <div class="content-frame">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="content-section">
+                                <img src="/public/Image/book5.png" alt="Book Image" id="bookImage" class="img-fluid"
+                                    style="width: 33.33%;">
+                                    <h5 class="text-center" style="font-size: 15px; padding:10px 5px;color: rgba(204, 144, 53, 0.699); ">LOVE RIGHT NEXT DOOR</h5>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="content-section">
+                                <h5 class="book-title" id="middleBookTitle" style="font-size: 20px;">BORROWING REQUESTS</h5><br>
+                                <!-- Changed book title in the middle -->
+                                <p id="borrowedDate">STUDENT ID : 66...</p> <!-- Changed borrowed date to student ID -->
+                                <p id="returnedDate">BORROWED DATE : 02/01/67</p>
+                                <p id="returnedDate">RETURNED DATE : 05/01/67</p> <!-- Removed redundant line -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="content-section button-section">
+                                <button class="btn text-white btn-lg" id="approveButton" >APPROVE</button><br>
+                                <!-- Changed cancel button to approve button -->
+                                <button class="btn text-white btn-lg" id="disapproveButton">DISAPPROVE</button>
+                                <!-- Added disapprove button -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><br>
+
+    <script>
+        function setUserName() {
+            const usernameElement = document.querySelector('#SetUsername');
+            const username = localStorage.getItem('name'); // Assuming you have stored the username in localStorage after login
+            usernameElement.textContent = username;
+        }
+        // Call the function when the page loads
+        window.onload = setUserName;
+        function logout() {
+            // Clear any user-related data from local storage
+            localStorage.removeItem('name'); // Assuming you store the username under the key 'name'
+
+            // Redirect to the index page
+            window.location.href = '/'; // Replace '/index.html' with the actual path of your index page
+        }
+
+        // Add event listener for logout button click
+        document.querySelector('#logoutBtn').addEventListener('click', function () {
+            logout();
+        });
+        // Event listener for the STATUS link
+        document.getElementById('statusLink').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent the default behavior of the link
+
+            // Code to fetch and display status
+            // You can fetch book status via AJAX or some other method and then populate the elements accordingly
+
+            // For now, let's assume you have some data:
+            const bookData = {
+                title: "Sample Book Title",
+                image: "path/to/book/image.jpg",
+                studentID: "12345",
+                borrowedDate: "2024-03-20",
+                returnedDate: "2024-04-03",
+                status: "Pending"
+            };
+
+            // Update UI with book data
+            document.getElementById('bookImage').src = bookData.image; // Set the source of the book image
+            document.getElementById('middleBookTitle').textContent = "BORROWING REQUESTS"; // Set the middle book title
+            document.getElementById('borrowedDate').textContent = "STUDENT ID: " + bookData.studentID; // Set the student ID
+            document.getElementById('returnedDate').textContent = "BORROWED DATE: " + bookData.borrowedDate; // Set the borrowed date
+            document.getElementById('status').textContent = "RETURNED DATE: " + bookData.returnedDate; // Set the returned date
+
+            // Hide book image, middle text, and buttons
+            document.getElementById('bookImage').style.display = "none";
+            document.getElementById('middleBookTitle').style.display = "none";
+            document.getElementById('approveButton').style.display = "none";
+            document.getElementById('disapproveButton').style.display = "none";
+        });
+
+        // Event listener for the Approve button
+        document.getElementById('approveButton').addEventListener('click', function () {
+            // Remove the content frame
+            document.querySelector('.content-frame').innerHTML = '';
+        });
+
+        // Event listener for the Disapprove button
+        document.getElementById('disapproveButton').addEventListener('click', function () {
+            // Remove the content frame
+            document.querySelector('.content-frame').innerHTML = '';
+        });
+
+        // Function to change the color of navigation links to red when clicked
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                navLinks.forEach(navLink => navLink.style.color = ''); // Reset all link colors
+                this.style.color = 'red'; // Set the clicked link color to red
+            });
+        });
+
+        function logout() {
+            // Clear any user-related data from local storage
+            localStorage.removeItem('name'); // Assuming you store the username under the key 'name'
+
+            // Redirect to the index page
+            window.location.href = '/'; // Replace '/index.html' with the actual path of your index page
+        }
+
+        // Add event listener for logout button click
+        document.querySelector('#logoutBtn').addEventListener('click', function () {
+            logout();
+        });
+
+    </script>
+</body>
+
+</html>

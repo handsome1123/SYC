@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/public/Css/Bootstap.min.css">
+    <script src="/public/Js/Bootstap.buddle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="/public/Js/sweetalert2.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>STAFF</title>
+    <style>
+        .content-section {
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px;
+            text-align: center; /* Center-align content */
+        }
+        .book-title, #statusLabel, #statusValue, #borrowedDate, #returnedDate {
+            font-size: 1em; /* Font size */
+            color: rgb(240, 92, 92); /* Red font color */
+            font-weight: bold; /* Bold font weight */
+        }
+        #statusValue {
+            color: grey; /* Grey color for "Pending" */
+            margin-left: 5px; /* Add some space between label and value */
+        }
+        #returnButton {
+            margin-top: 20px; 
+            float: right; 
+            border-radius: 20px; 
+        }
+        .input-group {
+            margin-bottom: 20px; /* Adjusted margin for space between search bar and content */
+            position: relative; /* Position the search bar container */
+        }
+       
+        
+        .content-frame {
+            background-color: #f0f0f0; /* Background color for the content frame */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px;
+            margin-top: 20px;
+        }
+        /* Added CSS for active navigation links */
+        .active-link {
+            color: red !important; /* Change the color to red */
+        }
+        /* Removed background color for top navigation bar */
+        .navbar {
+            background-color: transparent !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="text-end mx-3">
+        <img src="/public/Image/user.png" alt="User" width="25" class="mt-2 mb-2">
+        <span id="SetUsername" style="color: black;" class="mt-2">Staff</span> <!-- Updated "User" to "Staff" -->
+    </nav>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary ">
+        <div class="container border-bottom border-2 border-danger thick-border-bottom">
+            <img src="/public/Image/icon.png" alt="icon" width="75" class="mx-3">
+            <a class="navbar-brand text-white" href="/Home">
+                <span style="color: rgb(160, 0, 0);">BOOK BORROWING</span>_<span style="color: rgba(204, 144, 53, 0.699);">SYSTEM</span>
+            </a>            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/HomeStaff">DASHBOARD</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/HomeStaff/List">LIST</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/HomeStaff/Return" style="color: rgb(160, 0, 0);">RETURN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-dark" href="/HomeStaff/History">HISTORY</a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- Button trigger modal -->
+                        <a type="button" class="nav-link text-dark" data-bs-toggle="modal" data-bs-target="#modalId"
+                            data-target=".bd-example-modal-lg">
+                            LOGOUT
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-dialog" role="document">
+                                <div class="modal-content ">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalTitleId">
+                                            LOG OUT
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="button" class="btn btn-success" id="logoutBtn">LOG OUT</button>
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">CANCEL</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3" >
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control search-input rounded-pill" style="background-color: #f0f0f0;" placeholder="Search">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content-frame">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="content-section">
+                                <img src="/public/Image/book3.png" alt="Book Image" id="bookImage" class="img-fluid" style="width: 33.33%;">
+                                <h5 class="text-center" style="font-size: 15px; color: rgba(204, 144, 53, 0.699); margin-top:10px; ">
+                                    RULES FOR ROMANCE</h5>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="content-section">
+                                
+                                
+                                <h5 class="book-title" id="middleBookTitle"  style="font-size: 20px;">RETURNED THE BOOK</h5><br>
+                                <!-- Changed book title in the middle -->
+                                <p id="borrowedDate">STUDENT ID : 65...</p> <!-- Changed borrowed date to student ID -->
+                                <p id="returnedDate">BORROWED DATE : 05/11/66</p>
+                                <p id="returnedDate">RETURNED DATE : 06/11/66</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="content-section mt-5">
+                                <!-- Changed Cancel button to Return button -->
+                                <button class="btn btn-danger btn-lg" id="returnButton">RETURN</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setUserName() {
+            const usernameElement = document.querySelector('#SetUsername');
+            const username = localStorage.getItem('name'); // Assuming you have stored the username in localStorage after login
+            usernameElement.textContent = username;
+        }
+        // Call the function when the page loads
+        window.onload = setUserName;
+        
+        function logout() {
+            // Clear any user-related data from local storage
+            localStorage.removeItem('name'); // Assuming you store the username under the key 'name'
+
+            // Redirect to the index page
+            window.location.href = '/'; // Replace '/index.html' with the actual path of your index page
+        }
+
+        // Add event listener for logout button click
+        document.querySelector('#logoutBtn').addEventListener('click', function () {
+            logout();
+        });
+        // Event listener for the STATUS link
+        document.getElementById('statusLink').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default behavior of the link
+
+            // Code to fetch and display status
+            // You can fetch book status via AJAX or some other method and then populate the elements accordingly
+
+            // For now, let's assume you have some data:
+            const bookData = {
+                title: "RETURNED THE BOOK",
+                image: "path/to/book/image.jpg",
+                borrowedDate: "2024-03-20",
+                returnedDate: "2024-04-03",
+                status: "Pending"
+            };
+
+            // Update UI with book data
+            document.getElementById('bookImage').src = bookData.image; // Set the source of the book image
+            document.getElementById('middleBookTitle').innerHTML = bookData.title + "<br>STUDENT ID: 65......<br>BORROWED DATE: " + bookData.borrowedDate + "<br>RETURNED DATE: " + bookData.returnedDate; // Set the middle book title and additional information
+            
+            // Show the return button
+            document.getElementById('returnButton').style.display = "block";
+        });
+
+        // Event listener for the Return button
+        document.getElementById('returnButton').addEventListener('click', function() {
+            // Perform the action when the Return button is clicked
+            // For example, you can mark the book as returned in your system
+            // and then update the UI accordingly
+            alert('Book returned successfully!');
+        });
+    </script>
+</body>
+</html>
